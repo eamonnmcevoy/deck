@@ -419,6 +419,9 @@ func GetAllCACertificates(client *kong.Client,
 	for {
 		s, nextopt, err := client.CACertificates.List(nil, opt)
 		if err != nil {
+			if err.Error() == "Not found" {
+				return caCertificates, nil
+			}
 			return nil, err
 		}
 		caCertificates = append(caCertificates, s...)

@@ -42,6 +42,9 @@ func (s *CACertificateCRUD) Create(arg ...crud.Arg) (crud.Arg, error) {
 	createdCertificate, err := s.client.CACertificates.Create(nil,
 		&certificate.CACertificate)
 	if err != nil {
+		if err.Error() == "Not found" {
+			return certificate, nil
+		}
 		return nil, err
 	}
 	return &state.CACertificate{CACertificate: *createdCertificate}, nil
@@ -56,6 +59,9 @@ func (s *CACertificateCRUD) Delete(arg ...crud.Arg) (crud.Arg, error) {
 	certificate := caCertFromStuct(event)
 	err := s.client.CACertificates.Delete(nil, certificate.ID)
 	if err != nil {
+		if err.Error() == "Not found" {
+			return certificate, nil
+		}
 		return nil, err
 	}
 	return certificate, nil
@@ -71,6 +77,9 @@ func (s *CACertificateCRUD) Update(arg ...crud.Arg) (crud.Arg, error) {
 	updatedCertificate, err := s.client.CACertificates.Create(nil,
 		&certificate.CACertificate)
 	if err != nil {
+		if err.Error() == "Not found" {
+			return certificate, nil
+		}
 		return nil, err
 	}
 	return &state.CACertificate{CACertificate: *updatedCertificate}, nil

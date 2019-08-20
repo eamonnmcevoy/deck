@@ -53,6 +53,9 @@ func Reset(state *utils.KongRawState, client *kong.Client) error {
 	for _, u := range state.CACertificates {
 		err := client.CACertificates.Delete(nil, u.ID)
 		if err != nil {
+			if err.Error() == "Not found" {
+				return caCertificates, nil
+			}
 			return err
 		}
 	}
